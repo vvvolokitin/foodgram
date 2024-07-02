@@ -1,8 +1,19 @@
-from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from rest_framework.reverse import reverse
+
+from core.constants_recipes import (
+    MAX_AMOUNT,
+    MAX_COOKING_TIME,
+    MAX_LENGHT_MEASUREMENT_LENGTH,
+    MAX_LENGTH_INGREDINET_NAME,
+    MAX_LENGTH_RECIPE_NAME,
+    MAX_LENGTH_SHORT_URL,
+    MAX_LENGTH_TAG_NAME,
+    MIN_AMOUNT,
+    MIN_COOKING_TIME
+)
 from users.models import User
-from core.constants_recipes import MIN_AMOUNT, MAX_AMOUNT, MAX_LENGTH_SHORT_URL, MAX_LENGTH_RECIPE_NAME, MAX_LENGTH_TAG_NAME, MAX_LENGTH_INGREDINET_NAME, MAX_LENGHT_MEASUREMENT_LENGTH, MIN_COOKING_TIME, MAX_COOKING_TIME
 
 
 class Ingredient(models.Model):

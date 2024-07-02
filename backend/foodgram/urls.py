@@ -1,4 +1,4 @@
-from api.views import redirect_to_full_link
+from api.utils import redirect_to_full_link
 from django.contrib import admin
 from django.urls import include, path
 

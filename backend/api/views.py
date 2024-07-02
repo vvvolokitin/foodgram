@@ -19,7 +19,7 @@ from users.models import Subscription
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginators import PageLimitPagination
 from api.permissions import IsAuthorAdminOrReadOnly
-from api.utils import generate_short_url
+from api.utils import generate_short_url, redirect_to_full_link
 from api.serializers import (UserSerializer, IngredientSerializer,
                              RecipeSerializer, RecipesShortSerializer,
                              RecipeCreateSerializer, ShortLinkSerialiser,
@@ -312,7 +312,7 @@ class SubscriptionViewSet(ListAPIView):
         return user.subscriber.all()
 
 
-class GetShortLink(APIView):
+class ShortLink(APIView):
     repmission_classes = (AllowAny,)
 
     def get(self, request, recipe_id):
@@ -329,15 +329,4 @@ class GetShortLink(APIView):
         return Response(serializer.data)
 
 
-def redirect_to_full_link(request, short_link):
-    try:
-        link_obj = Link.objects.get(
-            short_link="http:/localhost/s/" + short_link
-        )
-        full_link = link_obj.base_link.replace('/api', '', 1)
-        return redirect(full_link)
-    except Link.DoesNotExist:
-        return HttpResponse(
-            'Ссылка не найдена',
-            status=status.HTTP_404_NOT_FOUND
-        )
+

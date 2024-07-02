@@ -5,7 +5,8 @@ from rest_framework import fields
 
 
 class Base64ImageField(fields.ImageField):
-    """Кастомное поле для кодирования изображения в base64."""
+    """Поле кодирования изображения в base64."""
+
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:image'):
             format, imgstr = data.split(';base64,')
