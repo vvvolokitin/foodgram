@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet as DjoserViewSet
-from recipes.models import (Favorite, Ingredient, RecipeIngredient, Link,
+from recipes.models import (Favorite, Ingredient, RecipeIngredient, 
                             Recipe, ShoppingCart, Tag)
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -14,15 +14,16 @@ from rest_framework.permissions import (SAFE_METHODS, AllowAny,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from users.models import Subscription
+from urlshortner.utils import shorten_url
 
+from users.models import Subscription
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginators import PageLimitPagination
 from api.permissions import IsAuthorAdminOrReadOnly
-from api.utils import generate_short_url, redirect_to_full_link
+# from api.utils import generate_short_url, redirect_to_full_link
 from api.serializers import (UserSerializer, IngredientSerializer,
                              RecipeSerializer, RecipesShortSerializer,
-                             RecipeCreateSerializer, ShortLinkSerialiser,
+                             RecipeCreateSerializer, 
                              SubscribedSerislizer, SubscriptionsSerializer,
                              TagSerializer, AvatarSerializer)
 
@@ -300,6 +301,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
             content_type='text/plain'
         )
 
+    @action(detail=True, url_path='get-link')
+    def get_link(self, request, pk=None):
+        get_object_or_404(Recipe, id=pk)
+        long_url = f'http://localhost/recipes/{pk}/'
+        prefix = 'http://localhost/s/'
+        short_link = shorten_url(long_url, is_permanent=True)
+        return Response(
+            {
+                'short-link': prefix + short_link,
+            }
+        )
 
 class SubscriptionViewSet(ListAPIView):
     """Вьюсет подписок."""
@@ -312,21 +324,21 @@ class SubscriptionViewSet(ListAPIView):
         return user.subscriber.all()
 
 
-class ShortLink(APIView):
-    repmission_classes = (AllowAny,)
+# class ShortLink(APIView):
+#     repmission_classes = (AllowAny,)
 
-    def get(self, request, recipe_id):
-        recipe = get_object_or_404(Recipe, id=recipe_id)
-        short_url = generate_short_url()
-        link_obj, _ = Link.objects.get_or_create(
-            recipe=recipe,
-            defaults={
-                'base_link': recipe.get_absolute_url(),
-                'short_link': short_url
-            }
-        )
-        serializer = ShortLinkSerialiser(link_obj)
-        return Response(serializer.data)
+#     def get(self, request, recipe_id):
+#         recipe = get_object_or_404(Recipe, id=recipe_id)
+#         short_url = generate_short_url()
+#         link_obj, _ = Link.objects.get_or_create(
+#             recipe=recipe,
+#             defaults={
+#                 'base_link': recipe.get_absolute_url(),
+#                 'short_link': short_url
+#             }
+#         )
+#         serializer = ShortLinkSerialiser(link_obj)
+#         return Response(serializer.data)
 
 
 

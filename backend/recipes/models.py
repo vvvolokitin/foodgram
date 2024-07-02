@@ -108,10 +108,10 @@ class Recipe(models.Model):
         auto_now_add=True,
         verbose_name='Дата публикации',
     )
-    direct_link = models.URLField(
-        verbose_name='Прямая ссылка на рецепт',
-        blank=True
-    )
+    # direct_link = models.URLField(
+    #     verbose_name='Прямая ссылка на рецепт',
+    #     blank=True
+    # )
 
     class Meta:
         verbose_name = 'Рецепт'
@@ -122,34 +122,34 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return reverse('api:recipes-detail', kwargs={'pk': self.pk})
+    # def get_absolute_url(self):
+    #     return reverse('api:recipes-detail', kwargs={'pk': self.pk})
 
 
-class Link(models.Model):
-    """Модель ссылки."""
+# class Link(models.Model):
+#     """Модель ссылки."""
 
-    recipe = models.OneToOneField(
-        Recipe,
-        on_delete=models.CASCADE,
-        primary_key=True
-    )
-    base_link = models.URLField(
-        verbose_name='Прямая ссылка на рецепт',
-        blank=True
-    )
-    short_link = models.CharField(
-        max_length=MAX_LENGTH_SHORT_URL,
-        verbose_name='Короткая ссылка на рецепт',
-        unique=True
-    )
+#     recipe = models.OneToOneField(
+#         Recipe,
+#         on_delete=models.CASCADE,
+#         primary_key=True
+#     )
+#     base_link = models.URLField(
+#         verbose_name='Прямая ссылка на рецепт',
+#         blank=True
+#     )
+#     short_link = models.CharField(
+#         max_length=MAX_LENGTH_SHORT_URL,
+#         verbose_name='Короткая ссылка на рецепт',
+#         unique=True
+#     )
 
-    class Meta:
-        verbose_name = 'Ссылка'
-        verbose_name_plural = 'Ссылки'
+#     class Meta:
+#         verbose_name = 'Ссылка'
+#         verbose_name_plural = 'Ссылки'
 
-    def __str__(self):
-        return self.short_link
+#     def __str__(self):
+#         return self.short_link
 
 
 class RecipeIngredient(models.Model):

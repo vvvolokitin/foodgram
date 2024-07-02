@@ -7,7 +7,6 @@ from api.fields import Base64ImageField
 from recipes.models import (
     Favorite,
     Ingredient,
-    Link,
     Recipe,
     RecipeIngredient,
     ShoppingCart,
@@ -334,15 +333,15 @@ class FavoriteSerializer(serializers.ModelSerializer):
         )
 
 
-class ShortLinkSerialiser(serializers.ModelSerializer):
-    """Сериализатор ссылки."""
+# class ShortLinkSerialiser(serializers.ModelSerializer):
+#     """Сериализатор ссылки."""
 
-    class Meta:
-        model = Link
-        fields = ('short_link',)
+#     class Meta:
+#         model = Link
+#         fields = ('short_link',)
 
-    def to_representation(self, instance):
-        return {'short-link': instance.short_link}
+#     def to_representation(self, instance):
+#         return {'short-link': instance.short_link}
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):

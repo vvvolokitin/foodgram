@@ -13,7 +13,7 @@ def generate_short_url():
 def redirect_to_full_link(request, short_link):
     try:
         link_obj = Link.objects.get(
-            short_link="http:/localhost/s/" + short_link
+            short_link="http://localhost/s/" + short_link
         )
         full_link = link_obj.base_link.replace('/api', '', 1)
         return redirect(full_link)
