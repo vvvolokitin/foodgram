@@ -39,7 +39,6 @@ router_v1.register(
     basename='recipes'
 )
 urlpatterns = [
-    # path('recipes/<int:recipe_id>/get-link/', ShortLink.as_view()),
     path('users/subscriptions/', SubscriptionViewSet.as_view()),
     path('auth/', include('djoser.urls.authtoken')),
     path('', include(router_v1.urls)),

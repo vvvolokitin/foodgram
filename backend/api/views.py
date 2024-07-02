@@ -1,6 +1,6 @@
 from django.db.models import Sum
 from django.http import Http404, HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet as DjoserViewSet
@@ -20,7 +20,6 @@ from users.models import Subscription
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginators import PageLimitPagination
 from api.permissions import IsAuthorAdminOrReadOnly
-# from api.utils import generate_short_url, redirect_to_full_link
 from api.serializers import (UserSerializer, IngredientSerializer,
                              RecipeSerializer, RecipesShortSerializer,
                              RecipeCreateSerializer, 
@@ -322,23 +321,3 @@ class SubscriptionViewSet(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return user.subscriber.all()
-
-
-# class ShortLink(APIView):
-#     repmission_classes = (AllowAny,)
-
-#     def get(self, request, recipe_id):
-#         recipe = get_object_or_404(Recipe, id=recipe_id)
-#         short_url = generate_short_url()
-#         link_obj, _ = Link.objects.get_or_create(
-#             recipe=recipe,
-#             defaults={
-#                 'base_link': recipe.get_absolute_url(),
-#                 'short_link': short_url
-#             }
-#         )
-#         serializer = ShortLinkSerialiser(link_obj)
-#         return Response(serializer.data)
-
-
-

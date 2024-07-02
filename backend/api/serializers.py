@@ -333,17 +333,6 @@ class FavoriteSerializer(serializers.ModelSerializer):
         )
 
 
-# class ShortLinkSerialiser(serializers.ModelSerializer):
-#     """Сериализатор ссылки."""
-
-#     class Meta:
-#         model = Link
-#         fields = ('short_link',)
-
-#     def to_representation(self, instance):
-#         return {'short-link': instance.short_link}
-
-
 class ShoppingCartSerializer(serializers.ModelSerializer):
     """Сериализатор списка покупок."""
 
