@@ -5,7 +5,7 @@ from recipes.models import Ingredient
 
 
 class Command(BaseCommand):
-    help = 'Импорт данных из csv файлов в БД.'
+    help = 'Импорт данных из csv файлов'
 
     def handle(self, *args, **options):
         self.import_ingredients()
