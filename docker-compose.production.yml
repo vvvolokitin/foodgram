@@ -22,7 +22,7 @@ services:
     depends_on:
       - db
   frontend:
-    container_name: foodgram-front
+    container_name: foodgram-frontend
     image: vvvolokitin/foodgram_frontend:latest
     volumes:
       - ./frontend/:/app/result_build/
