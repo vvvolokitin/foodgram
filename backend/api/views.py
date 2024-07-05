@@ -187,7 +187,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return RecipeCreateSerializer
 
     def general_method(self, request, pk, model):
-        """Метод управления избранным и списком покупок"""
+        """Метод управления избранным и списком покупок."""
         user = request.user
         if request.method == 'POST':
             try:
@@ -322,7 +322,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         get_object_or_404(Recipe, id=pk)
         host = os.getenv('URL_HOST', default='https://localhost')
         long_url = f'{host}/recipes/{pk}/'
-        prefix = '{host}/s/'
+        prefix = f'{host}/s/'
         short_link = shorten_url(long_url, is_permanent=True)
         return Response(
             {
