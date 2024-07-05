@@ -1,31 +1,45 @@
+
+from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet as DjoserViewSet
-from recipes.models import (Favorite, Ingredient, RecipeIngredient, 
-                            Recipe, ShoppingCart, Tag)
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import (SAFE_METHODS, AllowAny,
-                                        IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.permissions import (
+    SAFE_METHODS,
+    AllowAny,
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly
+)
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from urlshortner.utils import shorten_url
 
-from users.models import Subscription
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginators import PageLimitPagination
 from api.permissions import IsAuthorAdminOrReadOnly
-from api.serializers import (UserSerializer, IngredientSerializer,
-                             RecipeSerializer, RecipesShortSerializer,
-                             RecipeCreateSerializer, 
-                             SubscribedSerislizer, SubscriptionsSerializer,
-                             TagSerializer, AvatarSerializer)
-
+from api.serializers import (
+    AvatarSerializer,
+    IngredientSerializer,
+    RecipeCreateSerializer,
+    RecipeSerializer,
+    RecipesShortSerializer,
+    SubscribedSerislizer,
+    SubscriptionsSerializer,
+    TagSerializer,
+    UserSerializer
+)
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag
+)
+from users.models import Subscription
 
 User = get_user_model()
 
@@ -144,6 +158,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
     search_fields = ('name',)
+
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет тегов."""
@@ -311,6 +326,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'short-link': prefix + short_link,
             }
         )
+
 
 class SubscriptionViewSet(ListAPIView):
     """Вьюсет подписок."""

@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 
-from .models import Subscription
+from users.models import Subscription
 
 User = get_user_model()
+
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -21,6 +22,7 @@ class UserAdmin(admin.ModelAdmin):
     )
     list_display_links = ('username',)
     empty_value_display = 'Не задано'
+
 
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):

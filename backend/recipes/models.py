@@ -1,6 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from rest_framework.reverse import reverse
+
 
 from core.constants_recipes import (
     MAX_AMOUNT,
@@ -107,6 +107,7 @@ class Recipe(models.Model):
         auto_now_add=True,
         verbose_name='Дата публикации',
     )
+
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'

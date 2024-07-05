@@ -244,7 +244,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             if int(item['amount']) < 1:
                 raise serializers.ValidationError(
                     {
-                        'ingredients': 'Значение ингредиента должно быть больше 0'
+                        'ingredients':
+                        'Значение ингредиента должно быть больше 0'
                     }
                 )
         data['ingredients'] = ingredients
