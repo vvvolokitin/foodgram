@@ -320,8 +320,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_link(self, request, pk=None):
         """Метод получения короткйо ссылки"""
         get_object_or_404(Recipe, id=pk)
-
-        host = os.path.join('URL_HOST', 'https://localhost')
+        host = os.getenv('URL_HOST', default='https://localhost')
         long_url = f'{host}/recipes/{pk}/'
         prefix = '{host}/s/'
         short_link = shorten_url(long_url, is_permanent=True)
