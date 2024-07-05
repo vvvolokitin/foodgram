@@ -63,7 +63,7 @@ pip install -r backend/requirements.txt
 4. Создать файл .env и заполните его данными.
 
 ```
-SECRET_KEY='указать секретный ключ'
+
 POSTGRESQL=django.db.backends.postgresql
 POSTGRES_DB=foodgram
 POSTGRES_USER=foodgram_user
@@ -72,7 +72,9 @@ DB_NAME=foodgram
 DB_HOST=db
 DB_PORT=5432
 DEBUG=False
+SECRET_KEY='указать секретный ключ'
 ALLOWED_HOSTS='указать разрешенные адреса'
+URL_HOST= url для короткой ссылки
 ```
 5. Запустить docker-compose.production:
 

@@ -1,4 +1,6 @@
+import os
 
+from dotenv import load_dotenv
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.http import Http404, HttpResponse
@@ -41,6 +43,8 @@ from recipes.models import (
 )
 from users.models import Subscription
 
+
+load_dotenv()
 User = get_user_model()
 
 
@@ -183,7 +187,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return RecipeCreateSerializer
 
     def general_method(self, request, pk, model):
-        """Метод управления избранным, подписками и списком покупок"""
+        """Метод управления избранным и списком покупок"""
         user = request.user
         if request.method == 'POST':
             try:
@@ -245,7 +249,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def favorite(self, request, pk):
         """Метод управления избранным."""
-
         try:
             get_object_or_404(Recipe, id=pk)
         except Http404:
@@ -267,7 +270,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def shopping_cart(self, request, pk):
         """Метод управления списком покупок."""
-
         try:
             get_object_or_404(Recipe, id=pk)
         except Http404:
@@ -284,7 +286,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @staticmethod
     def shopping_cart_to_list(ingredients):
         """Метод создания списка покупок."""
-
         shopping_cart_list = ''
         for ingredient in ingredients:
             shopping_cart_list += (
@@ -317,9 +318,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, url_path='get-link')
     def get_link(self, request, pk=None):
+        """Метод получения короткйо ссылки"""
         get_object_or_404(Recipe, id=pk)
-        long_url = f'http://localhost/recipes/{pk}/'
-        prefix = 'http://localhost/s/'
+
+        host = os.path.join(URL_HOST, 'https://localhost')
+        long_url = f'{host}/recipes/{pk}/'
+        prefix = '{host}/s/'
         short_link = shorten_url(long_url, is_permanent=True)
         return Response(
             {

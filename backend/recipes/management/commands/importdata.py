@@ -5,15 +5,13 @@ from recipes.models import Ingredient
 
 
 class Command(BaseCommand):
-    help = 'Импорт данных из csv файлов'
+    help = 'Импорт ингредиентов в БД.'
 
     def handle(self, *args, **options):
         self.import_ingredients()
 
     def import_ingredients(self):
-        file_path = 'data/ingredients.csv'
-
-        with open(file_path, 'r', encoding='utf-8') as csv_file:
+        with open('data/ingredients.csv', 'r', encoding='utf-8') as csv_file:
             reader = csv.reader(csv_file)
             next(reader)
 
