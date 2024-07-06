@@ -323,7 +323,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         host = os.getenv('URL_HOST', default='https://localhost')
         long_url = f'{host}/recipes/{pk}/'
         prefix = f'{host}/s/'
-        short_link = shorten_url(long_url, is_permanent=True)
+        short_link = shorten_url(
+            long_url,
+            is_permanent=True
+        )
         return Response(
             {
                 'short-link': prefix + short_link,
