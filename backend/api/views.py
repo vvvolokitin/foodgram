@@ -319,22 +319,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=True, url_path='get-link')
     def get_link(self, request, pk=None):
         """Метод получения короткой ссылки."""
-        try:
-            get_object_or_404(Recipe, id=pk)
-        except Http404:
-            return Response(
-                'Рецепт не найден',
-                status=status.HTTP_404_NOT_FOUND
-            )
+        get_object_or_404(Recipe, id=pk)
         host = os.getenv('URL_HOST', default='https://localhost')
         long_url = f'{host}/recipes/{pk}/'
-        short_link = shorten_url(
-            long_url,
-            is_permanent=True
-        )
+        prefix = f'{host}/s/'
+        short_link = shorten_url(long_url, is_permanent=True)
         return Response(
             {
-                'short-link': f'{host}/s/{short_link}',
+                'short-link': prefix + short_link,
             }
         )
 

@@ -86,7 +86,7 @@ sudo docker compose -f docker-compose.production.yml up
 ```
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
-sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/backend_static/. /static/static/
+sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/backend_static/. /backend_static/static/
 ```
 7. Выполнить импорт ингредиентов в БД:
 ```
