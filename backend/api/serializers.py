@@ -40,7 +40,9 @@ class UserSerializer(DjoserUserSerializer):
         if user.is_authenticated:
             if isinstance(obj, User):
                 return Subscription.objects.filter(
-                    author=obj, user=user).exists()
+                    author=obj,
+                    user=user
+                ).exists()
             return True
         return False
 

@@ -20,11 +20,13 @@ class Ingredient(models.Model):
 
     name = models.CharField(
         verbose_name='Название',
-        max_length=MAX_LENGTH_INGREDINET_NAME
+        max_length=MAX_LENGTH_INGREDINET_NAME,
+        help_text='Выберите ингредиент'
     )
     measurement_unit = models.CharField(
         verbose_name='Единица изменения',
         max_length=MAX_LENGHT_MEASUREMENT_LENGTH,
+        help_text='Выберите единицу измерения'
     )
 
     class Meta:
@@ -48,12 +50,17 @@ class Tag(models.Model):
     name = models.CharField(
         verbose_name='Название',
         max_length=MAX_LENGTH_TAG_NAME,
-        unique=True
+        unique=True,
+        help_text='Выберите тег'
     )
 
     slug = models.SlugField(
         verbose_name='Слаг',
-        unique=True
+        unique=True,
+        help_text=(
+            'Идентификатор для слага; '
+            'разрешены символы латиницы, цифры, дефис и подчёркивание.'
+        )
     )
 
     class Meta:
@@ -76,32 +83,38 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         verbose_name='Название',
-        max_length=MAX_LENGTH_RECIPE_NAME
+        max_length=MAX_LENGTH_RECIPE_NAME,
+        help_text='Название рецепта'
     )
     image = models.ImageField(
         verbose_name='Картинка',
-        upload_to='recipes/images'
+        upload_to='recipes/images',
+        help_text='Изображение рецепта.'
     )
     text = models.TextField(
-        verbose_name='Описание'
+        verbose_name='Описание',
+        help_text='Описание рецепта.'
     )
     ingredients = models.ManyToManyField(
         Ingredient,
         related_name='ingredient_recipe',
         through='RecipeIngredient',
-        verbose_name='Ингредиенты'
+        verbose_name='Ингредиенты',
+        help_text='Выберите ингредиенты.'
     )
     tags = models.ManyToManyField(
         Tag,
         related_name='tag_recipe',
-        verbose_name='Теги'
+        verbose_name='Теги',
+        help_text='Выберите теги.'
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления',
         validators=(
             MinValueValidator(MIN_COOKING_TIME),
             MaxValueValidator(MAX_COOKING_TIME)
-        )
+        ),
+        help_text='Время приготовления'
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,
