@@ -1,7 +1,5 @@
 from rest_framework.permissions import SAFE_METHODS, BasePermission
 
-# from core.constants_users import ADMIN
-
 
 class IsAdminOrReadOnly(BasePermission):
     """Проврека администратор или безопасный метод."""
@@ -26,6 +24,5 @@ class IsAuthorAdminOrReadOnly(BasePermission):
         return (
             request.method in SAFE_METHODS
             or obj.author == request.user
-            # or request.user.role == ADMIN
             or request.user.is_superuser
         )

@@ -33,7 +33,6 @@ class TagAdmin(admin.ModelAdmin):
 
 
 class RecipeIngredientInline(admin.TabularInline):
-
     model = RecipeIngredient
     extra = 2
 

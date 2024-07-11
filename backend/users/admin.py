@@ -16,7 +16,6 @@ class UserAdmin(BaseUserAdmin):
         'last_name',
         'avatar',
     )
-    # list_editable = ('role',)
     search_fields = (
         'username',
         'email'

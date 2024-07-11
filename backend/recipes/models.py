@@ -53,7 +53,6 @@ class Tag(models.Model):
         unique=True,
         help_text='Выберите тег'
     )
-
     slug = models.SlugField(
         verbose_name='Слаг',
         unique=True,
@@ -104,7 +103,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tag,
-        related_name='tag_recipe',
+        related_name='tags_recipe',
         verbose_name='Теги',
         help_text='Выберите теги.'
     )
@@ -124,7 +123,6 @@ class Recipe(models.Model):
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-
         ordering = ('-pub_date',)
 
     def __str__(self):
@@ -178,6 +176,13 @@ class BaseModel(models.Model):
         verbose_name='Рецепт'
     )
 
+    constraints = (
+        models.UniqueConstraint(
+            fields=('user', 'recipe'),
+            name='unique_user_recipe'
+        ),
+    )
+
     class Meta:
         abstract = True
 
@@ -190,13 +195,6 @@ class Favorite(BaseModel):
         verbose_name_plural = 'Избранные'
         default_related_name = 'favorites'
 
-        constraints = (
-            models.UniqueConstraint(
-                fields=('user', 'recipe'),
-                name='unique_favorite'
-            ),
-        )
-
 
 class ShoppingCart(BaseModel):
     """Модель списка покупок"""
@@ -206,9 +204,3 @@ class ShoppingCart(BaseModel):
         verbose_name_plural = 'Списки покупок'
         ordering = ('user',)
         default_related_name = 'shopping_cart'
-        constraints = (
-            models.UniqueConstraint(
-                fields=('user', 'recipe'),
-                name='unique_shopping_cart'
-            ),
-        )
