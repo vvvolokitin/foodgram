@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 
 from users.models import Subscription
@@ -7,15 +8,15 @@ User = get_user_model()
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(BaseUserAdmin):
     list_display = (
         'username',
         'email',
         'first_name',
         'last_name',
         'avatar',
-        'role',)
-    list_editable = ('role',)
+    )
+    # list_editable = ('role',)
     search_fields = (
         'username',
         'email'
@@ -25,7 +26,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 @admin.register(Subscription)
-class SubscriptionAdmin(admin.ModelAdmin):
+class SubscriptionAdmin(BaseUserAdmin):
     list_display = (
         'user',
         'author',
