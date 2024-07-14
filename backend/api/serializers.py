@@ -38,15 +38,17 @@ class UserSerializer(DjoserUserSerializer):
             and Subscription.objects.filter(author=obj, user=user).exists()
         )
 
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
 
-class UserCreateSerializer(DjoserUserSerializer):
-    """Сериализатор сздания пользователя."""
+# class UserCreateSerializer(DjoserUserSerializer):
+#     """Сериализатор сздания пользователя."""
 
-    class Meta:
-        model = User
-        fields = tuple(User.REQUIRED_FIELDS) + (
-            'id',
-        )
+#     class Meta:
+#         model = User
+#         fields = tuple(User.REQUIRED_FIELDS) + (
+#             'id',
+#         )
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)

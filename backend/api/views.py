@@ -31,7 +31,6 @@ from api.serializers import (
     SubscribedSerislizer,
     SubscriptionsSerializer,
     TagSerializer,
-    UserCreateSerializer,
     UserSerializer
 )
 from recipes.models import (
@@ -53,13 +52,14 @@ class UserViewSet(DjoserViewSet):
     """Вьюсет пользователя."""
 
     queryset = User.objects.all()
+    serializer_class = UserSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     pagination_class = PageLimitPagination
 
-    def get_serializer_class(self):
-        if self.request.method in SAFE_METHODS:
-            return UserSerializer
-        return UserCreateSerializer
+    # def get_serializer_class(self):
+    #     if self.request.method in SAFE_METHODS:
+    #         return UserSerializer
+    #     return UserCreateSerializer
 
     def get_permissions(self):
         if self.action == 'me':
