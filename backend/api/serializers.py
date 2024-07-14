@@ -25,46 +25,27 @@ class UserSerializer(DjoserUserSerializer):
 
     class Meta:
         model = User
-        fields = (
+        fields = tuple(User.REQUIRED_FIELDS) + (
             'id',
-            'username',
-            'email',
-            'first_name',
-            'last_name',
             'avatar',
             'is_subscribed',
         )
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
-        if user.is_authenticated:
-            if isinstance(obj, User):
-                return Subscription.objects.filter(
-                    author=obj,
-                    user=user
-                ).exists()
-            return True
-        return False
+        return (
+            user.is_authenticated
+            and Subscription.objects.filter(author=obj, user=user).exists()
+        )
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
 
-class AvatarSerializer(serializers.ModelSerializer):
+class AvatarSerializer(serializers.Serializer):
     """Сериализатор аватара."""
 
-    avatar = Base64ImageField(
-        required=False
-    )
-
-    class Meta:
-        model = User
-        fields = ('avatar',)
-
-        def validate_avatar(self, value):
-            if not value:
-                raise ValidationError('Не добавлен аватар.')
-            return value
+    avatar = Base64ImageField()
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -101,8 +82,7 @@ class RecipreIngredientSerializer(serializers.ModelSerializer):
     )
     amount = serializers.IntegerField()
 
-    @staticmethod
-    def validate_amount(value):
+    def validate_amount(self, value):
         if value < 1:
             raise serializers.ValidationError(
                 'Количество ингредиента должно быть больше 0!'
@@ -125,8 +105,7 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
     amount = serializers.IntegerField()
 
-    @staticmethod
-    def validate_amount(value):
+    def validate_amount(self, value):
         if value < 1:
             raise serializers.ValidationError(
                 'Количество ингредиента должно быть больше 0!'
@@ -191,7 +170,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 class RecipeCreateSerializer(serializers.ModelSerializer):
     """Сериализатор создания рецептов."""
 
-    image = Base64ImageField()
     ingredients = RecipeIngredientCreateSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
