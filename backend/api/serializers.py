@@ -308,7 +308,10 @@ class FavoriteSerializer(serializers.ModelSerializer):
             serializers.UniqueTogetherValidator
             (
                 queryset=model.objects.all(),
-                fields=('recipe', 'user'),
+                fields=(
+                    'recipe',
+                    'user'
+                ),
                 message='Рецепт уже добавлен!'
             ),
         )
