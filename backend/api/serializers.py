@@ -44,7 +44,9 @@ class UserCreateSerializer(DjoserUserSerializer):
 
     class Meta:
         model = User
-        fields = tuple(User.REQUIRED_FIELDS)
+        fields = tuple(User.REQUIRED_FIELDS) + (
+            'id',
+        )
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
