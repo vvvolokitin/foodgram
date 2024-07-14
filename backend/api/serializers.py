@@ -170,6 +170,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 class RecipeCreateSerializer(serializers.ModelSerializer):
     """Сериализатор создания рецептов."""
 
+    image = Base64ImageField()
     ingredients = RecipeIngredientCreateSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
@@ -308,10 +309,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
             serializers.UniqueTogetherValidator
             (
                 queryset=model.objects.all(),
-                fields=(
-                    'recipe',
-                    'user'
-                ),
+                fields=('recipe', 'user'),
                 message='Рецепт уже добавлен!'
             ),
         )
