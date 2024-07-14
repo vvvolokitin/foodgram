@@ -38,9 +38,17 @@ class UserSerializer(DjoserUserSerializer):
             and Subscription.objects.filter(author=obj, user=user).exists()
         )
 
+    
+
+class UserCreateSerializer(DjoserUserSerializer):
+    """Сериализатор сздания пользователя."""
+
+    class Meta:
+        model = User
+        fields = tuple(User.REQUIRED_FIELDS) 
+    
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
-
 
 class AvatarSerializer(serializers.Serializer):
     """Сериализатор аватара."""
