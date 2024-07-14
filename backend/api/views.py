@@ -74,18 +74,16 @@ class UserViewSet(DjoserViewSet):
             self.request.user,
             data=request.data
         )
-        if request.method in ('PUT', 'GET'):
-            if (serializer.is_valid() and 'avatar' in request.data):
-                serializer.save()
-                return Response(
-                    serializer.data,
-                    status=status.HTTP_200_OK
-                )
+        if (serializer.is_valid() and 'avatar' in request.data):
+            serializer.save()
             return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
+                serializer.data,
+                status=status.HTTP_200_OK
             )
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     @avatar.mapping.delete
     def delete_avatar(self, request):
@@ -103,7 +101,7 @@ class UserViewSet(DjoserViewSet):
         )
 
     @action(
-        ['post', 'delete'],
+        ['post'],
         detail=True,
         permission_classes=(IsAuthenticated,),
         url_path='subscribe',
@@ -123,24 +121,31 @@ class UserViewSet(DjoserViewSet):
                 'author': author.id
             },
             context={'request': request})
-
-        if request.method == 'POST':
-            if user == author:
-                return Response(
-                    'Нельзя подписаться на самого себя!',
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            if change_subscription_status.exists():
-                return Response(
-                    f'Вы уже подписаны на {author}.',
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            serializer.is_valid()
-            serializer.save()
+        if user == author:
             return Response(
-                serializer.data,
-                status=status.HTTP_201_CREATED
+                'Нельзя подписаться на самого себя!',
+                status=status.HTTP_400_BAD_REQUEST
             )
+        if change_subscription_status.exists():
+            return Response(
+                f'Вы уже подписаны на {author}.',
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer.is_valid()
+        serializer.save()
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED
+        )
+
+    @subscribe.mapping.delete
+    def delete_subscribe(self, request, id):
+        user = request.user
+        author = get_object_or_404(User, id=id)
+        change_subscription_status = Subscription.objects.filter(
+            user=user.id,
+            author=author.id
+        )
         if change_subscription_status.exists():
             change_subscription_status.delete()
             return Response(
