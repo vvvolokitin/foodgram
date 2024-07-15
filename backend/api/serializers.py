@@ -63,15 +63,6 @@ class UserCreateSerializer(DjoserUserSerializer):
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
-# class UserCreateSerializer(DjoserUserSerializer):
-#     """Сериализатор сздания пользователя."""
-
-#     class Meta:
-#         model = User
-#         fields = tuple(User.REQUIRED_FIELDS) + (
-#             'id',
-#         )
-
 
 class AvatarSerializer(serializers.Serializer):
     """Сериализатор аватара."""
@@ -221,19 +212,22 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             'cooking_time'
         )
 
-    def validate(self, data):
-        tags = self.initial_data.get('tags')
-        if not tags:
+    def validate_tags(self, value):
+        if len(value) == 0:
             raise serializers.ValidationError(
                 'Должен быть отмечено не меньше 1 тега'
             )
-        if len(tags) != len(set(tags)):
-            raise serializers.ValidationError(
-                'Теги должны быть уникальными'
-            )
+        tag_list = []
+        for val in value:
+            if val in tag_list:
+                raise serializers.ValidationError(
+                    'Теги должны быть уникальными'
+                )
+            tag_list.append(val)
+        return value
 
-        ingredients = self.initial_data.get('ingredients')
-        if not ingredients:
+    def validate_ingredients(self, value):
+        if not value:
             raise serializers.ValidationError(
                 {
                     'ingredients': 'Должен быть хотя бы один ингредиент'
@@ -241,9 +235,9 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             )
 
         ingredient_list = []
-        for item in ingredients:
+        for val in value:
             try:
-                ingredient = Ingredient.objects.get(pk=item['id'])
+                ingredient = Ingredient.objects.get(id=val['id'])
             except Ingredient.DoesNotExist:
                 raise serializers.ValidationError(
                     'Введен не существующий ингредиент'
@@ -253,15 +247,14 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
                     'Ингридиенты должны быть уникальными'
                 )
             ingredient_list.append(ingredient)
-            if int(item['amount']) < 1:
+            if val['amount'] <= 0:
                 raise serializers.ValidationError(
                     {
                         'ingredients':
                         'Значение ингредиента должно быть больше 0'
                     }
                 )
-        data['ingredients'] = ingredients
-        return data
+        return value
 
     def validate_cooking_time(self, value):
         if value <= 0:
@@ -303,7 +296,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
-        RecipeIngredient.objects.filter(recipe=instance).delete()
+        # RecipeIngredient.objects.filter(recipe=instance).delete()
+        instance.ingredients.clear()
         self.create_ingredients(
             validated_data.pop('ingredients'),
             instance
