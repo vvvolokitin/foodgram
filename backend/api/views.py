@@ -53,7 +53,6 @@ class UserViewSet(DjoserViewSet):
     """Вьюсет пользователя."""
 
     queryset = User.objects.all()
-    # serializer_class = UserSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     pagination_class = PageLimitPagination
 

@@ -60,6 +60,13 @@ class UserCreateSerializer(DjoserUserSerializer):
             'password',
         )
 
+    def validate_username(self, username):
+        if username == 'me':
+            raise serializers.ValidationError(
+                'Имя пользователя не может быть "me".'
+            )
+        return username
+
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
@@ -296,7 +303,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
-        # RecipeIngredient.objects.filter(recipe=instance).delete()
         instance.ingredients.clear()
         self.create_ingredients(
             validated_data.pop('ingredients'),
