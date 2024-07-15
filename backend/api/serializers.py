@@ -57,7 +57,7 @@ class UserCreateSerializer(DjoserUserSerializer):
             'email',
             'first_name',
             'last_name',
-            'avatar',
+            'password',
         )
 
     def create(self, validated_data):

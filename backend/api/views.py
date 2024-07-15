@@ -58,9 +58,9 @@ class UserViewSet(DjoserViewSet):
     pagination_class = PageLimitPagination
 
     def get_serializer_class(self):
-        if self.request.method in SAFE_METHODS:
-            return UserSerializer
-        return UserCreateSerializer
+        if self.action == 'create':
+            return UserCreateSerializer
+        return UserSerializer
 
     def get_permissions(self):
         if self.action == 'me':
