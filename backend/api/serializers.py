@@ -37,13 +37,12 @@ class UserSerializer(DjoserUserSerializer):
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
-        return (
-            user.is_authenticated
-            and Subscription.objects.filter(
-                author=obj,
-                user=user
-            ).exists()
-        )
+        if user.is_authenticated:
+            if isinstance(obj, User):
+                return Subscription.objects.filter(
+                    author=obj, user=user).exists()
+            return True
+        return False
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
@@ -56,9 +55,6 @@ class UserSerializer(DjoserUserSerializer):
 #         fields = tuple(User.REQUIRED_FIELDS) + (
 #             'id',
 #         )
-
-    def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
 
 
 class AvatarSerializer(serializers.Serializer):
