@@ -44,7 +44,11 @@ class UserSerializer(DjoserUserSerializer):
                 user=user
             ).exists()
         )
+
+
 class UserCreateSerializer(DjoserUserSerializer):
+    """Сериализатор создания пользователя."""
+
     class Meta:
         model = User
         fields = (
@@ -55,7 +59,7 @@ class UserCreateSerializer(DjoserUserSerializer):
             'last_name',
             'avatar',
         )
-        
+
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
