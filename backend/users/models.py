@@ -5,7 +5,10 @@ from django.db import models
 
 from core.constants_users import (
     MAX_LENGTH_EMAIL,
-    MAX_LENGTH_NAME
+    MAX_LENGTH_NAME,
+    MAX_LENGTH_ROLE,
+    ROLES,
+    USER
 )
 
 
@@ -35,6 +38,12 @@ class User(AbstractUser):
         verbose_name='Аватар',
         upload_to='users',
         blank=True
+    )
+    role = models.CharField(
+        verbose_name='Пользовательская роль',
+        max_length=MAX_LENGTH_ROLE,
+        choices=ROLES,
+        default=USER
     )
 
     USERNAME_FIELD = 'email'
