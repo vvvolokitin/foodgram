@@ -25,8 +25,12 @@ class UserSerializer(DjoserUserSerializer):
 
     class Meta:
         model = User
-        fields = tuple(User.REQUIRED_FIELDS) + (
+        fields = (
             'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
             'avatar',
             'is_subscribed',
         )
@@ -35,7 +39,10 @@ class UserSerializer(DjoserUserSerializer):
         user = self.context.get('request').user
         return (
             user.is_authenticated
-            and Subscription.objects.filter(author=obj, user=user).exists()
+            and Subscription.objects.filter(
+                author=obj,
+                user=user
+            ).exists()
         )
 
     def create(self, validated_data):
