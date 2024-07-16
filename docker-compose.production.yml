@@ -18,7 +18,7 @@ services:
       - db
     volumes:
       - static:/backend_static
-      - media:/app/media
+      - media:/media
   frontend:
     image: vvvolokitin/foodgram_frontend:latest
     env_file: .env
