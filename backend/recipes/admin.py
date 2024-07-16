@@ -5,7 +5,8 @@ from .models import (
     Ingredient,
     RecipeIngredient,
     Recipe,
-    Tag
+    Tag,
+    Favorite
 )
 
 
@@ -57,3 +58,15 @@ class RecipeAdmin(admin.ModelAdmin):
     @admin.display(description="Добавлено в избранное")
     def number_to_favorites(self, obj):
         return Favorite.objects.filter(recipe=obj).count()
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'recipe'
+    )
+    search_fields = (
+        'user',
+        'recipe'
+    )
