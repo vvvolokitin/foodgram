@@ -57,6 +57,7 @@ class UserCreateSerializer(DjoserUserSerializer):
             'email',
             'first_name',
             'last_name',
+            'avatar',
             'password',
         )
 
@@ -71,10 +72,14 @@ class UserCreateSerializer(DjoserUserSerializer):
         return User.objects.create_user(**validated_data)
 
 
-class AvatarSerializer(serializers.Serializer):
+class AvatarSerializer(serializers.ModelSerializer):
     """Сериализатор аватара."""
 
     avatar = Base64ImageField()
+
+    class Meta:
+        model = User
+        fields = ('avatar',)
 
 
 class IngredientSerializer(serializers.ModelSerializer):
