@@ -22,10 +22,6 @@ class IngredientAdmin(admin.ModelAdmin):
     empty_value_display = 'Не задано'
 
 
-class RecipeInLine(admin.TabularInline):
-    model = Recipe
-
-
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = (
@@ -35,7 +31,6 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_display_links = ('name',)
     empty_value_display = 'Не задано'
-    inlines = (RecipeInLine,)
 
 
 class RecipeIngredientInline(admin.TabularInline):
