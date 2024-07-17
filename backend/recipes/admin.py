@@ -50,7 +50,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'name',
         'author'
     )
-    list_filter = ('tags',)
+    filter_horizontal = ('tags',)
     list_display_links = ('name',)
     empty_value_display = 'Не задано'
     inlines = (RecipeIngredientInline,)
