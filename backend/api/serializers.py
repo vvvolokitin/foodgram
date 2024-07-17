@@ -58,7 +58,8 @@ class UserCreateSerializer(DjoserUserSerializer):
         model = User
         fields = tuple(User.REQUIRED_FIELDS) + (
             'id',
-            'avatar'
+            'avatar',
+            'password'
         )
         # fields = (
         #     'id',
