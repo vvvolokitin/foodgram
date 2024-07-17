@@ -336,7 +336,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'Рецепт не найден',
                 status=status.HTTP_404_NOT_FOUND
             )
-        host = os.getenv('URL_HOST', default='https://localhost')
+        host = os.getenv(
+            'URL_HOST',
+            default='https://localhost'
+        )
         long_url = f'{host}/recipes/{pk}/'
         short_link = shorten_url(
             long_url,
