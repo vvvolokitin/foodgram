@@ -25,7 +25,7 @@ services:
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
-  gateway:
+  nginx:
     image: vvvolokitin/foodgram_gateway:latest
     env_file: .env
     ports:
@@ -33,7 +33,6 @@ services:
     volumes:
       - static:/static
       - media:/media
-      - ./docs/:/usr/share/nginx/html/api/docs/
     depends_on:
       - backend
       - frontend
