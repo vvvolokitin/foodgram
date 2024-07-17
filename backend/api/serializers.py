@@ -25,15 +25,20 @@ class UserSerializer(DjoserUserSerializer):
 
     class Meta:
         model = User
-        fields = (
+        fields = tuple(User.REQUIRED_FIELDS) + (
             'id',
-            'username',
-            'email',
-            'first_name',
-            'last_name',
             'avatar',
             'is_subscribed',
         )
+        # fields = (
+        #     'id',
+        #     'username',
+        #     'email',
+        #     'first_name',
+        #     'last_name',
+        #     'avatar',
+        #     'is_subscribed',
+        # )
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
@@ -51,15 +56,19 @@ class UserCreateSerializer(DjoserUserSerializer):
 
     class Meta:
         model = User
-        fields = (
+        fields = tuple(User.REQUIRED_FIELDS) + (
             'id',
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'avatar',
-            'password',
+            'avatar'
         )
+        # fields = (
+        #     'id',
+        #     'username',
+        #     'email',
+        #     'first_name',
+        #     'last_name',
+        #     'avatar',
+        #     'password',
+        # )
 
     def validate_username(self, username):
         if username == 'me':
