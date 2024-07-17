@@ -15,5 +15,4 @@ class Base64ImageField(fields.ImageField):
                 base64.b64decode(imgstr),
                 name='photo.' + ext
             )
-
         return super().to_internal_value(data)

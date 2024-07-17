@@ -51,7 +51,6 @@ class UserCreateSerializer(DjoserUserSerializer):
 
     class Meta:
         model = User
-
         fields = (
             'id',
             'username',
@@ -117,13 +116,6 @@ class RecipreIngredientSerializer(serializers.ModelSerializer):
     )
     amount = serializers.IntegerField()
 
-    def validate_amount(self, value):
-        if value < 1:
-            raise serializers.ValidationError(
-                'Количество ингредиента должно быть больше 0!'
-            )
-        return value
-
     class Meta:
         model = RecipeIngredient
         fields = (
@@ -133,13 +125,6 @@ class RecipreIngredientSerializer(serializers.ModelSerializer):
             'amount'
         )
 
-
-class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
-    """Сериализатор создания ингредиентов рецептов."""
-
-    id = serializers.IntegerField()
-    amount = serializers.IntegerField()
-
     def validate_amount(self, value):
         if value < 1:
             raise serializers.ValidationError(
@@ -147,12 +132,26 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
             )
         return value
 
+
+class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
+    """Сериализатор создания ингредиентов рецептов."""
+
+    id = serializers.IntegerField()
+    amount = serializers.IntegerField()
+
     class Meta:
         model = RecipeIngredient
         fields = (
             'id',
             'amount'
         )
+
+    def validate_amount(self, value):
+        if value < 1:
+            raise serializers.ValidationError(
+                'Количество ингредиента должно быть больше 0!'
+            )
+        return value
 
 
 class RecipeSerializer(serializers.ModelSerializer):
