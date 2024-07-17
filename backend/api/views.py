@@ -346,9 +346,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             is_permanent=True
         )
         return Response(
-            {
-                'short-link': f'{host}/s/{short_link}',
-            }
+            {'short-link': f'{host}/s/{short_link}', }
         )
 
 
