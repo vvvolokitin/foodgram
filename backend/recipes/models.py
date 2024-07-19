@@ -127,7 +127,7 @@ class Recipe(models.Model):
         ordering = ('-pub_date',)
 
     # def clean(self):
-    #     if self.ingredients.count() == 0:
+    #     if not self.ingredients:
     #         raise ValidationError(
     #             'Необходимо указать хотя бы один ингредиент'
     #         )

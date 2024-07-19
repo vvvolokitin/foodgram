@@ -43,8 +43,11 @@ class RecipeIngredientInline(admin.TabularInline):
     extra = 2
 
     def clean(self):
-        if not self.cleaned_data.get('ingredient'):
-            raise ValidationError('Необходимо указать хотя бы один ингредиент')
+        for inline_object in self.get_form().cleaned_data['__all__']:
+            if not inline_object.get('ingredient'):
+                raise ValidationError(
+                    'Необходимо указать хотя бы один ингредиент'
+                )
 
 
 @admin.register(Recipe)
