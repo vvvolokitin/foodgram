@@ -15,9 +15,7 @@ class Command(BaseCommand):
         with open('data/ingredients.csv', 'r', encoding='utf-8') as csv_file:
             reader = csv.reader(csv_file)
             next(reader)
-
-            ingredients = [
+            Ingredient.objects.bulk_create(
                 Ingredient(name=row[0], measurement_unit=row[1])
                 for row in reader
-            ]
-            Ingredient.objects.bulk_create(ingredients)
+            )

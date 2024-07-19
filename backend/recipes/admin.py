@@ -65,22 +65,12 @@ class RecipeAdmin(admin.ModelAdmin):
     def number_to_favorites(self, obj):
         return Favorite.objects.filter(recipe=obj).count()
 
-    def clean_ingredients(self):
-        instances = self.get_queryset()
-        for instance in instances:
-            if not instance.ingredient:
-                raise forms.ValidationError(
-                    "Необходимо добавить хотя бы один ингредиент")
-
-    # def save_formset(self, request, form, formset, change):
-    #     instances = formset.save(commit=False)
-    #     try:
-    #         if not any(instance.ingredient for instance in instances):
-    #             raise ValidationError(
-    #                 'Необходимо добавить хотя бы один ингредиент'
-    #             )
-    #     except ValidationError as e:
-    #         messages.error(request, e.message)
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        if not any(instance.ingredient for instance in instances):
+            raise forms.ValidationError(
+                'Необходимо добавить хотя бы один ингредиент'
+            )
 
 
 @admin.register(Favorite)

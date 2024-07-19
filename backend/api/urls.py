@@ -4,7 +4,7 @@ from django.urls import include, path
 from api.views import (
     IngredientViewSet,
     RecipeViewSet,
-    SubscriptionViewSet,
+    # SubscriptionViewSet,
     TagViewSet,
     UserViewSet
 )
@@ -39,7 +39,7 @@ router_v1.register(
     basename='recipes'
 )
 urlpatterns = [
-    path('users/subscriptions/', SubscriptionViewSet.as_view()),
+    # path('users/subscriptions/', SubscriptionViewSet.as_view()),
     path('auth/', include('djoser.urls.authtoken')),
     path('', include(router_v1.urls)),
 ]

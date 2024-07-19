@@ -8,7 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.generics import ListAPIView
+# from rest_framework.generics import ListAPIView
 from rest_framework.permissions import (
     SAFE_METHODS,
     AllowAny,
@@ -143,22 +143,21 @@ class UserViewSet(DjoserViewSet):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # @action(
-    #     ['get'],
-    #     permission_classes=(IsAuthenticated,),
-    #     detail=False,
-    #     url_path='users/subscriptions'
-    # )
-    # def subscriptions(self, request):
-    #     user = request.user
-    #     queryset = User.objects.filter(subscribed__user=user)
-    #     pages = self.paginate_queryset(queryset)
-    #     serializer = SubscriptionsSerializer(
-    #         pages,
-    #         many=True,
-    #         context={'request': request}
-    #     )
-    #     return self.get_paginated_response(serializer.data)
+    @action(
+        ['get'],
+        permission_classes=(IsAuthenticated,),
+        detail=False
+    )
+    def subscriptions(self, request):
+        user = request.user
+        queryset = User.objects.filter(subscribed__user=user)
+        paginated_queryset = self.paginate_queryset(queryset)
+        serializer = SubscriptionsSerializer(
+            paginated_queryset,
+            many=True,
+            context={'request': request}
+        )
+        return self.get_paginated_response(serializer.data)
 
     # class SubscriptionViewSet(ListAPIView):
     #     """Вьюсет подписок."""
@@ -392,12 +391,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
 
-class SubscriptionViewSet(ListAPIView):
-    """Вьюсет подписок."""
-    serializer_class = SubscriptionsSerializer
-    permission_classes = (IsAuthenticated,)
-    pagination_class = PageLimitPagination
+# class SubscriptionViewSet(ListAPIView):
+#     """Вьюсет подписок."""
+#     serializer_class = SubscriptionsSerializer
+#     permission_classes = (IsAuthenticated,)
+#     pagination_class = PageLimitPagination
 
-    def get_queryset(self):
-        user = self.request.user
-        return user.subscriber.all()
+#     def get_queryset(self):
+#         user = self.request.user
+#         return user.subscriber.all()
