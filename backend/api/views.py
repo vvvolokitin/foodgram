@@ -145,14 +145,15 @@ class UserViewSet(DjoserViewSet):
 
     @action(
         methods=['get'],
+        permission_classes=[IsAuthenticated],
         detail=False,
     )
     def subscriptions(self, request):
         user = request.user
-        queryset = User.objects.filter(subscribed__user=user)
-        pages = self.paginate_queryset(queryset)
+        queryset = user.subscriber.all()
+        # pages = self.paginate_queryset(queryset)
         serializer = SubscriptionsSerializer(
-            pages, many=True, context={"request": request}
+            queryset, many=True, context={"request": request}
         )
         return self.get_paginated_response(serializer.data)
 
@@ -346,7 +347,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         ['get'],
         detail=False,
-        permission_classes=[IsAuthenticated, ],
+        permission_classes=[IsAuthenticated],
         url_path='download_shopping_cart',
         url_name='download_shopping_cart',
     )
