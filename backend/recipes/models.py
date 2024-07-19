@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -126,11 +126,11 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date',)
 
-    def clean(self):
-        if self.ingredients.count() == 0:
-            raise ValidationError(
-                'Необходимо указать хотя бы один ингредиент'
-            )
+    # def clean(self):
+    #     if self.ingredients.count() == 0:
+    #         raise ValidationError(
+    #             'Необходимо указать хотя бы один ингредиент'
+    #         )
 
     def __str__(self):
         return self.name
