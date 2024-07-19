@@ -346,7 +346,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             ShoppingCart
         )
 
-    @favorite.mapping.delete
+    @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
         """Метод удаления из списка покупок."""
         try:
