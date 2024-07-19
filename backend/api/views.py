@@ -146,18 +146,16 @@ class UserViewSet(DjoserViewSet):
         )
 
     @action(
-        methods=['get'],
-        detail=False,
-        url_path='subscriptions'
+        ['post'],
+        detail=False
     )
     def subscriptions(self, request):
-        user = request.user
-        queryset = user.subscriber.all()
-        pages = self.paginate_queryset(queryset)
-        serializer = SubscriptionsSerializer(
-            pages, many=True, context={"request": request}
-        )
-        return self.get_paginated_response(serializer.data)
+        user = self.request.user
+        serializer = SubscriptionsSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user.subscriber.add(*serializer.validated_data['author'])
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # class SubscriptionViewSet(ListAPIView):
     #     """Вьюсет подписок."""
