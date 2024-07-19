@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.contrib import admin
 
 
@@ -63,6 +64,12 @@ class RecipeAdmin(admin.ModelAdmin):
     @admin.display(description="Добавлено в избранное")
     def number_to_favorites(self, obj):
         return Favorite.objects.filter(recipe=obj).count()
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        if not any(instance.ingredient for instance in instances):
+            raise ValidationError(
+                "Необходимо добавить хотя бы один ингредиент")
 
 
 @admin.register(Favorite)
