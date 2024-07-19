@@ -135,10 +135,6 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
-
 
 class RecipeIngredient(models.Model):
     """Модель взаимосвязи ингредиентов и рецептов."""
@@ -171,6 +167,10 @@ class RecipeIngredient(models.Model):
                 fields=('recipe', 'ingredient'),
                 name='unique_recipe_ingredient'),
         )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
 
 class BaseForSubscriptionSystemModel(models.Model):
