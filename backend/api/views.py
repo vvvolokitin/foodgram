@@ -1,6 +1,5 @@
 import os
 
-from dotenv import load_dotenv
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.http import Http404, HttpResponse
