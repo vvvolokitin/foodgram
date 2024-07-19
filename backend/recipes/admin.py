@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 
 from .models import (
     Ingredient,
@@ -35,7 +36,15 @@ class TagAdmin(admin.ModelAdmin):
 
 class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
+    fields = (
+        'ingredient',
+        'amount'
+    )
     extra = 2
+
+    def clean(self):
+        if not self.cleaned_data.get('ingredient'):
+            raise ValidationError('Необходимо указать хотя бы один ингредиент')
 
 
 @admin.register(Recipe)

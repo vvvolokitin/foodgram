@@ -58,14 +58,11 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
         ordering = ('username',)
 
-    def clean_username(self):
+    def clean(self):
         if self.username.lower() in ('me', 'em'):
             raise ValidationError(
                 'Имя пользователя не может быть "me"'
             )
-
-    def __str__(self):
-        return self.username
 
 
 class Subscription(models.Model):
