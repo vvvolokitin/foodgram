@@ -62,7 +62,7 @@ class UserCreateSerializer(DjoserUserSerializer):
         )
 
     def validate_username(self, username):
-        if username == 'me':
+        if username.lower() in ('me', 'em'):
             raise serializers.ValidationError(
                 'Имя пользователя не может быть "me".'
             )

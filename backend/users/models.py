@@ -59,7 +59,7 @@ class User(AbstractUser):
         ordering = ('username',)
 
     def clean_username(self):
-        if self.username == 'me':
+        if self.username.lower() in ('me', 'em'):
             raise ValidationError(
                 'Имя пользователя не может быть "me"'
             )

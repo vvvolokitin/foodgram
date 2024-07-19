@@ -116,26 +116,27 @@ class UserViewSet(DjoserViewSet):
         """Метод управления подписками."""
         user = request.user
         author = get_object_or_404(User, id=id)
-        change_subscription_status = Subscription.objects.filter(
-            user=user.id,
-            author=author.id
-        )
-        serializer = SubscribedSerislizer(
-            data={
-                'user': user.id,
-                'author': author.id
-            },
-            context={'request': request})
         if user == author:
             return Response(
                 'Нельзя подписаться на самого себя!',
                 status=status.HTTP_400_BAD_REQUEST
             )
+        change_subscription_status = Subscription.objects.filter(
+            user=user.id,
+            author=author.id
+        )
         if change_subscription_status.exists():
             return Response(
                 f'Вы уже подписаны на {author}.',
                 status=status.HTTP_400_BAD_REQUEST
             )
+        serializer = SubscribedSerislizer(
+            data={
+                'user': user.id,
+                'author': author.id
+            },
+            context={'request': request}
+        )
         serializer.is_valid()
         serializer.save()
         return Response(

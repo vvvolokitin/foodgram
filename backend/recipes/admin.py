@@ -5,7 +5,8 @@ from .models import (
     RecipeIngredient,
     Recipe,
     Tag,
-    Favorite
+    Favorite,
+    ShoppingCart
 )
 
 
@@ -61,6 +62,18 @@ class RecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'recipe'
+    )
+    search_fields = (
+        'user',
+        'recipe'
+    )
+
+
+@admin.register(ShoppingCart)
+class ShoppingCarteAdmin(admin.ModelAdmin):
     list_display = (
         'user',
         'recipe'
