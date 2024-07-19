@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from django import forms
 from django.contrib import admin
 
 
@@ -68,7 +68,7 @@ class RecipeAdmin(admin.ModelAdmin):
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
         if not any(instance.ingredient for instance in instances):
-            raise ValidationError(
+            raise forms.ValidationError(
                 "Необходимо добавить хотя бы один ингредиент")
 
 
