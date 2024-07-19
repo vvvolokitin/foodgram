@@ -9,7 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.generics import ListAPIView
+# from rest_framework.generics import ListAPIView
 from rest_framework.permissions import (
     SAFE_METHODS,
     AllowAny,
@@ -145,6 +145,30 @@ class UserViewSet(DjoserViewSet):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+    @action(
+        methods=['get', ],
+        detail=False,
+        url_path='subscriptions'
+    )
+    def subscriptions(self, request):
+        user = request.user
+        queryset = User.objects.filter(author__user=user)
+        pages = self.paginate_queryset(queryset)
+        serializer = SubscriptionsSerializer(
+            pages, many=True, context={"request": request}
+        )
+        return self.get_paginated_response(serializer.data)
+
+    # class SubscriptionViewSet(ListAPIView):
+    #     """Вьюсет подписок."""
+    #     serializer_class = SubscriptionsSerializer
+    #     permission_classes = (IsAuthenticated,)
+    #     pagination_class = PageLimitPagination
+
+    #     def get_queryset(self):
+    #         user = self.request.user
+    #         return user.subscriber.all()
+
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет ингредиентов."""
@@ -231,60 +255,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             {'errors': f'В избранном нет рецепта "{recipe.name}"'},
             status=status.HTTP_400_BAD_REQUEST
         )
-
-    # def general_method(self, request, pk, model):
-    #     """Метод управления избранным и списком покупок."""
-    #     user = request.user
-    #     if request.method == 'POST':
-    #         try:
-    #             recipe = get_object_or_404(Recipe, id=pk)
-    #         except Http404:
-    #             return Response(
-    #                 'Рецепт не найден',
-    #                 status=status.HTTP_400_BAD_REQUEST
-    #             )
-
-    #         if model.objects.filter(
-    #             user=user,
-    #             recipe=recipe
-    #         ).exists():
-    #             return Response(
-    #                 {'errors': f'Рецепт-"{recipe.name}" уже добавлен!'},
-    #                 status=status.HTTP_400_BAD_REQUEST
-    #             )
-    #         model.objects.create(
-    #             user=user,
-    #             recipe=recipe
-    #         )
-    #         serializer = RecipesShortSerializer(recipe)
-    #         return Response(
-    #             serializer.data,
-    #             status=status.HTTP_201_CREATED
-    #         )
-
-    #     if request.method == 'DELETE':
-    #         try:
-    #             recipe = get_object_or_404(
-    #                 Recipe,
-    #                 id=pk
-    #             )
-    #         except Http404:
-    #             return Response(
-    #                 'Рецепт не найден',
-    #                 status=status.HTTP_404_NOT_FOUND
-    #             )
-    #         obj = model.objects.filter(
-    #             user=user,
-    #             recipe=recipe
-    #         )
-    #         if obj.exists():
-    #             obj.delete()
-    #             return Response(status=status.HTTP_204_NO_CONTENT)
-    #         return Response(
-    #             {'errors': f'В избранном нет рецепта "{recipe.name}"'},
-    #             status=status.HTTP_400_BAD_REQUEST
-    #         )
-    #     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @action(
         ['post'],
@@ -419,12 +389,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
 
-class SubscriptionViewSet(ListAPIView):
-    """Вьюсет подписок."""
-    serializer_class = SubscriptionsSerializer
-    permission_classes = (IsAuthenticated,)
-    pagination_class = PageLimitPagination
+# class SubscriptionViewSet(ListAPIView):
+#     """Вьюсет подписок."""
+#     serializer_class = SubscriptionsSerializer
+#     permission_classes = (IsAuthenticated,)
+#     pagination_class = PageLimitPagination
 
-    def get_queryset(self):
-        user = self.request.user
-        return user.subscriber.all()
+#     def get_queryset(self):
+#         user = self.request.user
+#         return user.subscriber.all()
