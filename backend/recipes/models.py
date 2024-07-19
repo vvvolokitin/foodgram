@@ -135,6 +135,10 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
 
 class RecipeIngredient(models.Model):
     """Модель взаимосвязи ингредиентов и рецептов."""
@@ -169,7 +173,7 @@ class RecipeIngredient(models.Model):
         )
 
 
-class BaseModel(models.Model):
+class BaseForSubscriptionSystemModel(models.Model):
     """Базовая модель."""
 
     user = models.ForeignKey(
@@ -194,7 +198,7 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class Favorite(BaseModel):
+class Favorite(BaseForSubscriptionSystemModel):
     """Модель избранного."""
 
     class Meta:
@@ -203,7 +207,7 @@ class Favorite(BaseModel):
         default_related_name = 'favorites'
 
 
-class ShoppingCart(BaseModel):
+class ShoppingCart(BaseForSubscriptionSystemModel):
     """Модель списка покупок"""
 
     class Meta:
