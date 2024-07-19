@@ -126,6 +126,11 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date',)
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.id = uuid.uuid4()
+        super().save(*args, **kwargs)
+
     def clean(self):
         if self.ingredients.count() == 0:
             raise ValidationError(
