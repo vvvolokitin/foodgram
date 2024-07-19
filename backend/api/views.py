@@ -8,7 +8,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-# from rest_framework.generics import ListAPIView
 from rest_framework.permissions import (
     SAFE_METHODS,
     AllowAny,
@@ -157,16 +156,6 @@ class UserViewSet(DjoserViewSet):
             context={'request': request}
         )
         return self.get_paginated_response(serializer.data)
-
-    # class SubscriptionViewSet(ListAPIView):
-    #     """Вьюсет подписок."""
-    #     serializer_class = SubscriptionsSerializer
-    #     permission_classes = (IsAuthenticated,)
-    #     pagination_class = PageLimitPagination
-
-    #     def get_queryset(self):
-    #         user = self.request.user
-    #         return user.subscriber.all()
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
@@ -388,14 +377,3 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(
             {'short-link': f'{host}/s/{short_link}', }
         )
-
-
-# class SubscriptionViewSet(ListAPIView):
-#     """Вьюсет подписок."""
-#     serializer_class = SubscriptionsSerializer
-#     permission_classes = (IsAuthenticated,)
-#     pagination_class = PageLimitPagination
-
-#     def get_queryset(self):
-#         user = self.request.user
-#         return user.subscriber.all()
