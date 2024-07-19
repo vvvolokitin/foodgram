@@ -1,6 +1,4 @@
-# from django import forms
 from django.contrib import admin
-
 
 from .models import (
     Ingredient,
@@ -41,7 +39,7 @@ class RecipeIngredientInline(admin.TabularInline):
         'ingredient',
         'amount'
     )
-    extra = 2
+    extra = 1
     min_num = 1
 
 
@@ -65,13 +63,6 @@ class RecipeAdmin(admin.ModelAdmin):
     @admin.display(description="Добавлено в избранное")
     def number_to_favorites(self, obj):
         return Favorite.objects.filter(recipe=obj).count()
-
-    # def save_formset(self, request, form, formset, change):
-    #     instances = formset.save(commit=False)
-    #     if not any(instance.ingredient for instance in instances):
-    #         raise forms.ValidationError(
-    #             'Необходимо добавить хотя бы один ингредиент'
-    #         )
 
 
 @admin.register(Favorite)

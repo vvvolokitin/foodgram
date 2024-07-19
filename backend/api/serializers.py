@@ -554,5 +554,4 @@ class SubscribedSerislizer(serializers.ModelSerializer):
                 f'Вы уже подписаны на {author}.',
                 status=status.HTTP_400_BAD_REQUEST
             )
-
         return data

@@ -1,7 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-
 from core.constants_recipes import (
     MAX_AMOUNT,
     MAX_COOKING_TIME,
