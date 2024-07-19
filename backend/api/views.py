@@ -67,14 +67,14 @@ class UserViewSet(DjoserViewSet):
         return super().get_permissions()
 
     @action(
-        ['get', 'put'],
+        ['put'],
         detail=False,
         permission_classes=(IsAuthenticated,),
         url_path='me/avatar',
         url_name='avatar',
     )
     def avatar(self, request):
-        """Метод добавления/получения аватара."""
+        """Метод добавления аватара."""
         serializer = AvatarSerializer(
             self.request.user,
             data=request.data
@@ -97,13 +97,9 @@ class UserViewSet(DjoserViewSet):
             self.request.user,
             data=request.data
         )
-        if (serializer.is_valid()):
+        if serializer.is_valid(raise_exception=True):
             request.user.avatar.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
 
     @action(
         ['post'],

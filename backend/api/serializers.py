@@ -370,7 +370,7 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
             ),
         )
 
-    def validate(self, data):
+    def validate_recipe(self, data):
         recipe = data['recipe']
         if not recipe:
             raise ValidationError('Рецепт не может быть пустым!')

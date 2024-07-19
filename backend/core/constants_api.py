@@ -1,1 +1,2 @@
 PAGE_SIZE = 6
+PAGE_SIZE_QUERY_PARAM = 'limit'
