@@ -112,20 +112,6 @@ class UserViewSet(DjoserViewSet):
         """Метод управления подписками."""
         user = request.user
         author = get_object_or_404(User, id=id)
-        if user == author:
-            return Response(
-                'Нельзя подписаться на самого себя!',
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        change_subscription_status = Subscription.objects.filter(
-            user=user.id,
-            author=author.id
-        )
-        if change_subscription_status.exists():
-            return Response(
-                f'Вы уже подписаны на {author}.',
-                status=status.HTTP_400_BAD_REQUEST
-            )
         serializer = SubscribedSerislizer(
             data={
                 'user': user.id,
@@ -133,7 +119,7 @@ class UserViewSet(DjoserViewSet):
             },
             context={'request': request}
         )
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
             serializer.data,
@@ -193,69 +179,122 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeSerializer
         return RecipeCreateSerializer
 
-    def general_method(self, request, pk, model):
-        """Метод управления избранным и списком покупок."""
+    def add_recipe(self, request, pk, model):
+        """Метод добавления рецепта в избранное/список покупок."""
         user = request.user
-        if request.method == 'POST':
-            try:
-                recipe = get_object_or_404(Recipe, id=pk)
-            except Http404:
-                return Response(
-                    'Рецепт не найден',
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-            if model.objects.filter(
-                user=user,
-                recipe=recipe
-            ).exists():
-                return Response(
-                    {'errors': f'Рецепт-"{recipe.name}" уже добавлен!'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            model.objects.create(
-                user=user,
-                recipe=recipe
-            )
-            serializer = RecipesShortSerializer(recipe)
+        try:
+            recipe = get_object_or_404(Recipe, id=pk)
+        except Http404:
             return Response(
-                serializer.data,
-                status=status.HTTP_201_CREATED
-            )
-
-        if request.method == 'DELETE':
-            try:
-                recipe = get_object_or_404(
-                    Recipe,
-                    id=pk
-                )
-            except Http404:
-                return Response(
-                    'Рецепт не найден',
-                    status=status.HTTP_404_NOT_FOUND
-                )
-            obj = model.objects.filter(
-                user=user,
-                recipe=recipe
-            )
-            if obj.exists():
-                obj.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            return Response(
-                {'errors': f'В избранном нет рецепта "{recipe.name}"'},
+                'Рецепт не найден',
                 status=status.HTTP_400_BAD_REQUEST
             )
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        if model.objects.filter(
+            user=user,
+            recipe=recipe
+        ).exists():
+            return Response(
+                {'errors': f'Рецепт-"{recipe.name}" уже добавлен!'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        model.objects.create(
+            user=user,
+            recipe=recipe
+        )
+        serializer = RecipesShortSerializer(recipe)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED
+        )
+
+    def delete_recipe(self, request, pk, model):
+        """Метод удаления рецепта из избрнного/списка покупок."""
+        user = request.user
+        try:
+            recipe = get_object_or_404(
+                Recipe,
+                id=pk
+            )
+        except Http404:
+            return Response(
+                'Рецепт не найден',
+                status=status.HTTP_404_NOT_FOUND
+            )
+        obj = model.objects.filter(
+            user=user,
+            recipe=recipe
+        )
+        if obj.exists():
+            obj.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {'errors': f'В избранном нет рецепта "{recipe.name}"'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # def general_method(self, request, pk, model):
+    #     """Метод управления избранным и списком покупок."""
+    #     user = request.user
+    #     if request.method == 'POST':
+    #         try:
+    #             recipe = get_object_or_404(Recipe, id=pk)
+    #         except Http404:
+    #             return Response(
+    #                 'Рецепт не найден',
+    #                 status=status.HTTP_400_BAD_REQUEST
+    #             )
+
+    #         if model.objects.filter(
+    #             user=user,
+    #             recipe=recipe
+    #         ).exists():
+    #             return Response(
+    #                 {'errors': f'Рецепт-"{recipe.name}" уже добавлен!'},
+    #                 status=status.HTTP_400_BAD_REQUEST
+    #             )
+    #         model.objects.create(
+    #             user=user,
+    #             recipe=recipe
+    #         )
+    #         serializer = RecipesShortSerializer(recipe)
+    #         return Response(
+    #             serializer.data,
+    #             status=status.HTTP_201_CREATED
+    #         )
+
+    #     if request.method == 'DELETE':
+    #         try:
+    #             recipe = get_object_or_404(
+    #                 Recipe,
+    #                 id=pk
+    #             )
+    #         except Http404:
+    #             return Response(
+    #                 'Рецепт не найден',
+    #                 status=status.HTTP_404_NOT_FOUND
+    #             )
+    #         obj = model.objects.filter(
+    #             user=user,
+    #             recipe=recipe
+    #         )
+    #         if obj.exists():
+    #             obj.delete()
+    #             return Response(status=status.HTTP_204_NO_CONTENT)
+    #         return Response(
+    #             {'errors': f'В избранном нет рецепта "{recipe.name}"'},
+    #             status=status.HTTP_400_BAD_REQUEST
+    #         )
+    #     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @action(
-        ['post', 'delete'],
+        ['post'],
         detail=True,
         permission_classes=[IsAuthenticated],
         url_path='favorite',
         url_name='favorite'
     )
     def favorite(self, request, pk):
-        """Метод управления избранным."""
+        """Метод добавления в избранное."""
         try:
             get_object_or_404(Recipe, id=pk)
         except Http404:
@@ -263,20 +302,37 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'Рецепт не найден',
                 status=status.HTTP_404_NOT_FOUND
             )
-        return self.general_method(
-            request, pk,
+        return self.add_recipe(
+            request,
+            pk,
+            Favorite
+        )
+
+    @favorite.mapping.delete
+    def delete_favorite(self, request, pk):
+        """Метод удаления избранного."""
+        try:
+            get_object_or_404(Recipe, id=pk)
+        except Http404:
+            return Response(
+                'Рецепт не найден',
+                status=status.HTTP_404_NOT_FOUND
+            )
+        return self.delete_recipe(
+            request,
+            pk,
             Favorite
         )
 
     @action(
-        ['post', 'delete'],
+        ['post'],
         detail=True,
         permission_classes=[IsAuthenticated],
         url_path='shopping_cart',
         url_name='shopping_cart'
     )
     def shopping_cart(self, request, pk):
-        """Метод управления списком покупок."""
+        """Метод добавления в спискок покупок."""
         try:
             get_object_or_404(Recipe, id=pk)
         except Http404:
@@ -284,7 +340,23 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'Рецепт не найден',
                 status=status.HTTP_404_NOT_FOUND
             )
-        return self.general_method(
+        return self.add_recipe(
+            request,
+            pk,
+            ShoppingCart
+        )
+
+    @favorite.mapping.delete
+    def delete_shopping_cart(self, request, pk):
+        """Метод удаления из списка покупок."""
+        try:
+            get_object_or_404(Recipe, id=pk)
+        except Http404:
+            return Response(
+                'Рецепт не найден',
+                status=status.HTTP_404_NOT_FOUND
+            )
+        return self.delete_recipe(
             request,
             pk,
             ShoppingCart

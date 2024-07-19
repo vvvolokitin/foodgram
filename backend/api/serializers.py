@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from djoser.serializers import UserSerializer as DjoserUserSerializer
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
 
 from api.fields import Base64ImageField
 from recipes.models import (
@@ -534,3 +535,24 @@ class SubscribedSerislizer(serializers.ModelSerializer):
             context=context
         )
         return serialiser.data
+
+    def validate(self, data):
+        user = self.context['request'].user
+        author = data.get('author')
+        change_subscription_status = Subscription.objects.filter(
+            user=user.id,
+            author=author.id
+        )
+        if user == author:
+            return Response(
+                'Нельзя подписаться на самого себя!',
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        elif change_subscription_status.exists():
+            return Response(
+                f'Вы уже подписаны на {author}.',
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        return data
