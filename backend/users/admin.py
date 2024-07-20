@@ -34,4 +34,3 @@ class SubscriptionAdmin(admin.ModelAdmin):
         'user',
         'author'
     )
-    empty_value_display = 'Не задано'

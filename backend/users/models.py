@@ -87,12 +87,13 @@ class Subscription(models.Model):
         default_related_name = 'subscription'
         constraints = (
             models.UniqueConstraint(
-                fields=(
-                    'user', 'author'),
+                fields=('user', 'author'),
                 name='unique_user_subscription'
             ),
         )
 
     def clean(self):
+        if not self.user and not self.author:
+            raise ValidationError('Поля должны быть заполнены.')
         if self.user == self.author:
             raise ValidationError('Нельзя подписаться на самого себя.')
