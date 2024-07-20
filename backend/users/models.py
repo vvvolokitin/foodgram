@@ -94,3 +94,9 @@ class Subscription(models.Model):
                 name='subscribe_to_yourself'
             ),
         )
+
+    def clean(self):
+        if not self.user or not self.author:
+            raise ValidationError('Должны быть заполнены поля!')
+        elif self.user == self.author:
+            raise ValidationError('Нельзя подписаться на самого себя.')
