@@ -28,6 +28,10 @@ class UserAdmin(BaseUserAdmin):
 class SubscriptionAdmin(admin.ModelAdmin):
     list_display = (
         'user',
-        'author',
+        'author'
+    )
+    search_fields = (
+        'user',
+        'author'
     )
     empty_value_display = 'Не задано'
