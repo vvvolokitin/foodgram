@@ -178,12 +178,6 @@ class BaseForSubscriptionSystemModel(models.Model):
 
     class Meta:
         abstract = True
-        constraints = (
-            models.UniqueConstraint(
-                fields=('user', 'recipe'),
-                name='unique_user_recipe'
-            ),
-        )
 
 
 class Favorite(BaseForSubscriptionSystemModel):
@@ -193,6 +187,12 @@ class Favorite(BaseForSubscriptionSystemModel):
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные'
         default_related_name = 'favorites'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('user', 'recipe'),
+                name='unique_favorite'
+            ),
+        )
 
 
 class ShoppingCart(BaseForSubscriptionSystemModel):
@@ -203,3 +203,9 @@ class ShoppingCart(BaseForSubscriptionSystemModel):
         verbose_name_plural = 'Списки покупок'
         ordering = ('user',)
         default_related_name = 'shopping_cart'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('user', 'recipe'),
+                name='unique_shoppingcart'
+            ),
+        )
