@@ -94,4 +94,3 @@ class Subscription(models.Model):
                 name='subscribe_to_yourself'
             )
         )
-
