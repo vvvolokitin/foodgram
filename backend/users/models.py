@@ -90,17 +90,8 @@ class Subscription(models.Model):
                 name='unique_user_subscription'
             ),
             models.CheckConstraint(
-                check=~models.Q(author__exact=models.F('user')),
+                check=~models.Q(author=models.F('user')),
                 name='subscribe_to_yourself'
-            ),
+            )
         )
 
-    # def save(self, *args, **kwargs):
-    #     if self.user == self.author:
-    #         raise ValidationError('Нельзя подписаться на самого себя.')
-    #     super().save(*args, **kwargs)
-    # # def clean(self):
-    # #     if not self.user or not self.author:
-    # #         raise ValidationError('Должны быть заполнены поля!')
-    # #     elif self.user == self.author:
-    # #         raise ValidationError('Нельзя подписаться на самого себя.')
