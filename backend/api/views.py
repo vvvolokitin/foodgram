@@ -76,15 +76,11 @@ class UserViewSet(DjoserViewSet):
             self.request.user,
             data=request.data
         )
-        if (serializer.is_valid() and 'avatar' in request.data):
-            serializer.save()
-            return Response(
-                serializer.data,
-                status=status.HTTP_200_OK
-            )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
+            serializer.data,
+            status=status.HTTP_200_OK
         )
 
     @avatar.mapping.delete
@@ -94,9 +90,9 @@ class UserViewSet(DjoserViewSet):
             self.request.user,
             data=request.data
         )
-        if serializer.is_valid(raise_exception=True):
-            request.user.avatar.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer.is_valid(raise_exception=True)
+        request.user.avatar.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         ['post'],
@@ -107,11 +103,10 @@ class UserViewSet(DjoserViewSet):
     )
     def subscribe(self, request, id):
         """Метод управления подписками."""
-        user = request.user
         author = get_object_or_404(User, id=id)
         serializer = SubscribedSerislizer(
             data={
-                'user': user.id,
+                'user': request.user.id,
                 'author': author.id
             },
             context={'request': request}
@@ -127,12 +122,12 @@ class UserViewSet(DjoserViewSet):
     def delete_subscribe(self, request, id):
         user = request.user
         author = get_object_or_404(User, id=id)
-        change_subscription_status = Subscription.objects.filter(
+        subscription_status = Subscription.objects.filter(
             user=user.id,
             author=author.id
         )
-        if change_subscription_status.exists():
-            change_subscription_status.delete()
+        if subscription_status.exists():
+            subscription_status.delete()
             return Response(
                 f'Вы отписались от {author}.',
                 status=status.HTTP_204_NO_CONTENT
@@ -147,8 +142,7 @@ class UserViewSet(DjoserViewSet):
         detail=False,
     )
     def subscriptions(self, request):
-        user = request.user
-        queryset = Subscription.objects.filter(user=user)
+        queryset = Subscription.objects.filter(user=request.user)
         pages = self.paginate_queryset(queryset)
         serializer = SubscriptionsSerializer(
             pages,

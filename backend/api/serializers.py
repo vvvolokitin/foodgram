@@ -539,7 +539,7 @@ class SubscribedSerislizer(serializers.ModelSerializer):
     def validate(self, data):
         user = self.context['request'].user
         author = data.get('author')
-        change_subscription_status = Subscription.objects.filter(
+        subscription_status = Subscription.objects.filter(
             user=user.id,
             author=author.id
         )
@@ -549,7 +549,7 @@ class SubscribedSerislizer(serializers.ModelSerializer):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        elif change_subscription_status.exists():
+        elif subscription_status.exists():
             return Response(
                 f'Вы уже подписаны на {author}.',
                 status=status.HTTP_400_BAD_REQUEST
