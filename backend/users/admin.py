@@ -25,13 +25,9 @@ class UserAdmin(BaseUserAdmin):
 
 
 @admin.register(Subscription)
-class SubscriptionAdmin(BaseUserAdmin):
+class SubscriptionAdmin(admin.ModelAdmin):
     list_display = (
-        'subscriber',
-        'subscribed',
-    )
-    search_fields = (
         'user',
-        'author'
+        'author',
     )
     empty_value_display = 'Не задано'

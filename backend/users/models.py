@@ -90,7 +90,8 @@ class Subscription(models.Model):
                     'user',
                     'author'
                 ),
-                name='unique_user_subscription'
+                name='unique_user_subscription',
+                violation_error_message='Уже подписан'
             ),
         )
 
