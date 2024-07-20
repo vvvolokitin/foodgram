@@ -72,13 +72,15 @@ class Subscription(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='subscriber',
-        verbose_name='Подписчик'
+        verbose_name='Подписчик',
+        blank=False
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='subscribed',
-        verbose_name='Автор'
+        verbose_name='Автор',
+        blank=False
     )
 
     class Meta:
@@ -93,7 +95,5 @@ class Subscription(models.Model):
         )
 
     def clean(self):
-        if not self.user or not self.author:
-            raise ValidationError('Поля должны быть заполнены.')
-        # if self.user == self.author:
-        #     raise ValidationError('Нельзя подписаться на самого себя.')
+        if self.user == self.author:
+            raise ValidationError('Нельзя подписаться на самого себя.')
