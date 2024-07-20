@@ -72,15 +72,13 @@ class Subscription(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='subscriber',
-        verbose_name='Подписчик',
-        blank=False
+        verbose_name='Подписчик'
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='subscribed',
-        verbose_name='Автор',
-        blank=False
+        verbose_name='Автор'
     )
 
     class Meta:
@@ -92,8 +90,8 @@ class Subscription(models.Model):
                 fields=('user', 'author'),
                 name='unique_user_subscription'
             ),
+            models.CheckConstraint(
+                check=~models.Q(user=models.F('author')),
+                name='subscribe_to_yourself'
+            ),
         )
-
-    def clean(self):
-        if self.user == self.author:
-            raise ValidationError('Нельзя подписаться на самого себя.')
