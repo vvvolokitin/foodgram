@@ -175,15 +175,14 @@ class BaseForSubscriptionSystemModel(models.Model):
         verbose_name='Рецепт'
     )
 
-    constraints = (
-        models.UniqueConstraint(
-            fields=('user', 'recipe'),
-            name='unique_user_recipe'
-        ),
-    )
-
     class Meta:
         abstract = True
+        constraints = (
+            models.UniqueConstraint(
+                fields=('user', 'recipe'),
+                name='unique_user_recipe'
+            ),
+        )
 
 
 class Favorite(BaseForSubscriptionSystemModel):

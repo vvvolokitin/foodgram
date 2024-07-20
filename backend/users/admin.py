@@ -27,8 +27,8 @@ class UserAdmin(BaseUserAdmin):
 @admin.register(Subscription)
 class SubscriptionAdmin(BaseUserAdmin):
     list_display = (
-        'user',
-        'author',
+        'subscriber',
+        'subscribed',
     )
     search_fields = (
         'user',

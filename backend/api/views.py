@@ -249,13 +249,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def favorite(self, request, pk):
         """Метод добавления в избранное."""
-        try:
-            get_object_or_404(Recipe, id=pk)
-        except Http404:
-            return Response(
-                'Рецепт не найден',
-                status=status.HTTP_404_NOT_FOUND
-            )
         return self.add_recipe(
             request,
             pk,
@@ -265,13 +258,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
         """Метод удаления избранного."""
-        try:
-            get_object_or_404(Recipe, id=pk)
-        except Http404:
-            return Response(
-                'Рецепт не найден',
-                status=status.HTTP_404_NOT_FOUND
-            )
         return self.delete_recipe(
             request,
             pk,
@@ -287,13 +273,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def shopping_cart(self, request, pk):
         """Метод добавления в спискок покупок."""
-        try:
-            get_object_or_404(Recipe, id=pk)
-        except Http404:
-            return Response(
-                'Рецепт не найден',
-                status=status.HTTP_404_NOT_FOUND
-            )
         return self.add_recipe(
             request,
             pk,
@@ -303,13 +282,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk):
         """Метод удаления из списка покупок."""
-        try:
-            get_object_or_404(Recipe, id=pk)
-        except Http404:
-            return Response(
-                'Рецепт не найден',
-                status=status.HTTP_404_NOT_FOUND
-            )
         return self.delete_recipe(
             request,
             pk,
