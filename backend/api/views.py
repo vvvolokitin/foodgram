@@ -9,7 +9,6 @@ from djoser.views import UserViewSet as DjoserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import (
-    SAFE_METHODS,
     AllowAny,
     IsAuthenticated,
     IsAuthenticatedOrReadOnly
@@ -183,9 +182,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = RecipeFilter
 
     def get_serializer_class(self):
-        if self.request.method in SAFE_METHODS:
-            return RecipeSerializer
-        return RecipeCreateSerializer
+        if self.action in ['create', 'update', 'partial_update']:
+            return RecipeCreateSerializer
+        return RecipeSerializer
 
     def add_recipe(self, request, pk, model):
         """Метод добавления рецепта в избранное/список покупок."""
