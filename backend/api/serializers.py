@@ -129,7 +129,7 @@ class RecipreIngredientSerializer(serializers.ModelSerializer):
     def validate_amount(self, value):
         if value < 1:
             raise serializers.ValidationError(
-                'Количество ингредиента должно быть больше 0!'
+                'Количество ингредиентов должно быть больше 0!'
             )
         return value
 
@@ -150,7 +150,7 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
     def validate_amount(self, value):
         if value < 1:
             raise serializers.ValidationError(
-                'Количество ингредиента должно быть больше 0!'
+                'Количество ингредиентов должно быть больше 0!'
             )
         return value
 
@@ -228,13 +228,13 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
     def validate_tags(self, value):
         if len(value) == 0:
             raise serializers.ValidationError(
-                'Должен быть отмечено не меньше 1 тега'
+                'Должно быть отмечено не меньше 1 тега!'
             )
         tag_list = []
         for val in value:
             if val in tag_list:
                 raise serializers.ValidationError(
-                    'Теги должны быть уникальными'
+                    'Теги должны быть уникальными!'
                 )
             tag_list.append(val)
         return value
@@ -243,7 +243,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         if not value:
             raise serializers.ValidationError(
                 {
-                    'ingredients': 'Должен быть хотя бы один ингредиент'
+                    'ingredients': 'Должен быть хотя бы один ингредиент!'
                 }
             )
 
@@ -253,18 +253,18 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
                 ingredient = Ingredient.objects.get(id=val['id'])
             except Ingredient.DoesNotExist:
                 raise serializers.ValidationError(
-                    'Введен не существующий ингредиент'
+                    'Введен не существующий ингредиент!'
                 )
             if ingredient in ingredient_list:
                 raise serializers.ValidationError(
-                    'Ингридиенты должны быть уникальными'
+                    'Ингридиенты должны быть уникальными!'
                 )
             ingredient_list.append(ingredient)
             if val['amount'] <= 0:
                 raise serializers.ValidationError(
                     {
                         'ingredients':
-                        'Значение ингредиента должно быть больше 0'
+                        'Значение ингредиента должно быть больше 0!'
                     }
                 )
         return value
