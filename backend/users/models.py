@@ -89,10 +89,6 @@ class Subscription(models.Model):
                 fields=('user', 'author'),
                 name='unique_user_subscription'
             ),
-            models.CheckConstraint(
-                check=~models.Q(user=models.F('author')),
-                name='subscribe_to_yourself'
-            )
         )
 
     def clean(self):
