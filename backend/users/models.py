@@ -95,7 +95,7 @@ class Subscription(models.Model):
             )
         )
 
-    def clean_fields(self, exclude=None):
-        super().clean_fields(exclude=exclude)
-        if self.user and self.author and self.user == self.author:
-            raise ValidationError("Нельзя подписаться на самого себя.")
+    def clean(self):
+        if hasattr(self, 'user') and hasattr(self, 'author'):
+            if self.user == self.author:
+                raise ValidationError("Нельзя подписаться на самого себя.")
