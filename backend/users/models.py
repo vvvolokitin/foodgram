@@ -96,5 +96,7 @@ class Subscription(models.Model):
         )
 
     def clean(self):
-        if self.user and self.author and self.user == self.author:
+        user = self.cleaned_data.get('user', None)
+        author = self.cleaned_data.get('author', None)
+        if user == author:
             raise ValidationError("Нельзя подписаться на самого себя.")
