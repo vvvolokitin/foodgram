@@ -91,11 +91,12 @@ class Subscription(models.Model):
             ),
             models.CheckConstraint(
                 check=~models.Q(user=models.F('author')),
-                name='subscribe_to_yourself'
+                name='subscribe_to_yourself',
+                
             )
         )
 
-    def clean(self):
-        if self.user and self.author:
-            if self.user == self.author:
-                raise ValidationError("Нельзя подписаться на самого себя.")
+    def clean_fields(self, exclude=None):
+        super().clean_fields(exclude=exclude)
+        if self.user and self.author and self.user == self.author:
+            raise ValidationError("Нельзя подписаться на самого себя.")
