@@ -91,8 +91,7 @@ class Subscription(models.Model):
             ),
             models.CheckConstraint(
                 check=~models.Q(user=models.F('author')),
-                name='subscribe_to_yourself',
-                
+                name='subscribe_to_yourself'
             )
         )
 
